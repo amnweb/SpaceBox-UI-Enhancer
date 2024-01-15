@@ -5,13 +5,17 @@
   "icon": "images/icon.png",
   "publisher": "SpaceBox",
   "repository": "https://github.com/amnweb/SpaceBox-UI-Enhancer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.80.0"
   },
   "categories": [
     "Other"
   ],
+  "galleryBanner": {
+		"color": "#0d1116",
+		"theme": "dark"
+	},
   "activationEvents": [],
   "main": "./extension.js",
   "contributes": {

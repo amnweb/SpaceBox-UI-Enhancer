@@ -35,3 +35,6 @@ A simple and lightweight UI enhancer for VSCode, providing enhanced customizatio
 2. Go to the Command Palette (`Ctrl+Shift+P`)
 3. Type "SpaceBox Disable UI Enhancer"
 4. Restart
+
+## Marketplace
+You can download the extension from the Visual Studio Code marketplace: [SpaceBox UI Enhancer](https://marketplace.visualstudio.com/items?itemName=SpaceBox.spacebox-ui)
