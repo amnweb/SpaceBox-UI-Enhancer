@@ -5,9 +5,9 @@
   "icon": "images/icon.png",
   "publisher": "SpaceBox",
   "repository": "https://github.com/amnweb/SpaceBox-UI-Enhancer",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
-    "vscode": "^1.80.0"
+    "vscode": "^1.86.0"
   },
   "categories": [
     "Other"
