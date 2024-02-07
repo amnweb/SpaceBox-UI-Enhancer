@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.5
+- **New Feature**: You can define now colors for UI.
+- Other bug fixes.
+
 ## 0.0.4 - Ready for VSCode v1.86+
 - **New Feature**: Ready for VSCode version 1.86+.
 - **New Feature**: Added new animations.

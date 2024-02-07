@@ -42,6 +42,29 @@ A simple and lightweight UI enhancer for VSCode, providing enhanced customizatio
 2. Deactivate and Activate from Command Palette
 
 Note: In the future, I will make this automatic.
+ 
+## How to chnage color
+
+You can change your color easily, go to vscode settings.json and define the color you like, example
+
+```
+	"workbench.colorCustomizations": {
+		"menu.background": "#262c3670", //menu background
+		"menu.selectionBackground": "#3e465377", //menu hover background
+		"menu.separatorBackground": "#3e434d9f" //menu separator line color
+	}
+```
+
+
+## Demo
+<p align="center">
+<img src="images/demo.gif" alt="demo" title="demo" width="900">
+</p>
+
+
+
+You need to add transparent color to get an acrylic effect, *menu.background* will be applied to other UI elements as well.
+
 
 ## Marketplace
 You can download the extension from the Visual Studio Code marketplace: [SpaceBox UI Enhancer](https://marketplace.visualstudio.com/items?itemName=SpaceBox.spacebox-ui)

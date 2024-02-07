@@ -1,47 +1,47 @@
 {
-  "name": "spacebox-ui",
-  "displayName": "SpaceBox UI Enhancer",
-  "description": "Experience enhanced customization of VSCode UI, featuring animations, blur effects, and more.",
-  "icon": "images/icon.png",
-  "publisher": "SpaceBox",
-  "repository": "https://github.com/amnweb/SpaceBox-UI-Enhancer",
-  "version": "0.0.4",
-  "engines": {
-    "vscode": "^1.86.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "galleryBanner": {
+	"name": "spacebox-ui",
+	"displayName": "SpaceBox UI Enhancer",
+	"description": "Experience enhanced customization of VSCode UI, featuring animations, blur effects, and more.",
+	"icon": "images/icon.png",
+	"publisher": "SpaceBox",
+	"repository": "https://github.com/amnweb/SpaceBox-UI-Enhancer",
+	"version": "0.0.5",
+	"engines": {
+		"vscode": "^1.86.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"galleryBanner": {
 		"color": "#0d1116",
 		"theme": "dark"
 	},
-  "activationEvents": [],
-  "main": "./extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "spacebox-ui.modifyFiles",
-        "title": "SpaceBox Enable UI Enhancer"
-      },
-      {
-        "command": "spacebox-ui.restoreSettings",
-        "title": "SpaceBox Disable UI Enhancer"
-      }
-    ]
-  },
-  "scripts": {
-    "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "vscode-test"
-  },
-  "devDependencies": {
-    "@types/mocha": "^10.0.6",
-    "@types/node": "18.x",
-    "@types/vscode": "^1.80.0",
-    "@vscode/test-cli": "^0.0.4",
-    "@vscode/test-electron": "^2.3.8",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3"
-  }
+	"activationEvents": [],
+	"main": "./extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "spacebox-ui.modifyFiles",
+				"title": "SpaceBox Enable UI Enhancer"
+			},
+			{
+				"command": "spacebox-ui.restoreSettings",
+				"title": "SpaceBox Disable UI Enhancer"
+			}
+		]
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "npm run lint",
+		"test": "vscode-test"
+	},
+	"devDependencies": {
+		"@types/mocha": "^10.0.6",
+		"@types/node": "18.x",
+		"@types/vscode": "^1.80.0",
+		"@vscode/test-cli": "^0.0.4",
+		"@vscode/test-electron": "^2.3.8",
+		"eslint": "^8.56.0",
+		"typescript": "^5.3.3"
+	}
 }
