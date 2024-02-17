@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.0.6
+- "Some features are disabled because of VS Code bugs. Blur does not work for now. This extension uses backdrop-filter for blurring menus, while VSCode has some strange bugs and incompatibility with backdrop filter, I decided to disable this function for now. Here is what happened when backdrop filter is inside VSCode: https://i.imgur.com/v6Uvqf3.gif."
+
+## 0.0.5
+- **New Feature**: You can define now colors for UI.
+- Other bug fixes.
+
 ## 0.0.5
 - **New Feature**: You can define now colors for UI.
 - Other bug fixes.
