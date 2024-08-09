@@ -8,3 +8,5 @@ vsc-extension-quickstart.md
 **/*.map
 **/.eslintrc.json
 **/.vscode-test.*
+images/demo.gif
+node_modules/**

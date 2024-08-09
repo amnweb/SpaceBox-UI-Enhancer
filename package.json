@@ -5,7 +5,7 @@
 	"icon": "images/icon.png",
 	"publisher": "SpaceBox",
 	"repository": "https://github.com/amnweb/SpaceBox-UI-Enhancer",
-	"version": "0.0.5",
+	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.86.0"
 	},
@@ -19,6 +19,23 @@
 	"activationEvents": [],
 	"main": "./extension.js",
 	"contributes": {
+		"configuration": {
+			"title": "SpaceBox UI Enhancer Configuration",
+			"properties": {
+				"spacebox-ui.defaultStyle": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable or disable the default style SpaceBoxUI style.",
+                    "order": 1
+				},
+				"spacebox-ui.importCss": {
+					"type": "string",
+					"default": "",
+					"description": "Path to the custom CSS file to be applied.",
+                    "order": 2
+				}
+			}
+		},
 		"commands": [
 			{
 				"command": "spacebox-ui.modifyFiles",

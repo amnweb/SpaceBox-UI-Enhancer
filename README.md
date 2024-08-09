@@ -5,7 +5,7 @@
 A simple and lightweight UI enhancer for VSCode, providing enhanced customization of the VSCode UI. Features animations, blur effects, and more. Works best with the [SpaceBox Theme](https://marketplace.visualstudio.com/items?itemName=SpaceBox.spacebox-theme).
 
 > [!NOTE]
->"Some features are disabled because of VS Code bugs. Blur does not work for now. This extension uses backdrop-filter for blurring menus, while VSCode has some strange bugs and incompatibility with backdrop filter, I decided to disable this function for now. Here is what happened with font in editor and UI when backdrop filter is inside VSCode. This bug has already been reported; I hope they will fix it soon."
+>"Some features are disabled because of VS Code bugs. Blur is disabled by default. This extension uses backdrop-filter for blurring menus, while VSCode has some strange bugs and incompatibility with backdrop filter, I decided to disable this function for now. Here is what happened with font in editor and UI when backdrop filter is inside VSCode. This bug has already been reported, I hope they will fix it soon. Also, since this extension supports importing custom CSS, you can easily enable blur if you want to test."
 
 <img src="https://i.imgur.com/v6Uvqf3.gif" />
 
