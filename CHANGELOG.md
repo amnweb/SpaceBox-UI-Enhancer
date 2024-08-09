@@ -2,7 +2,7 @@
 
 ## 0.1.0
 - Added options to disable default extension style. `"spacebox-ui.defaultStyle": true|false`
-- Added strings for custom css import. You can now import local css file. `"spacebox-ui.importCss": "c:\\Users\\xxx\\editor.css",`
+- Added options for custom css import. You can now import local css file. `"spacebox-ui.importCss": "c:\\Users\\xxx\\editor.css",`
 
 ## 0.0.6
 - "Some features are disabled because of VS Code bugs. Blur does not work for now. This extension uses backdrop-filter for blurring menus, while VSCode has some strange bugs and incompatibility with backdrop filter, I decided to disable this function for now. Here is what happened when backdrop filter is inside VSCode: https://i.imgur.com/v6Uvqf3.gif."
