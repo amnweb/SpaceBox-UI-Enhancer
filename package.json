@@ -5,7 +5,7 @@
 	"icon": "images/icon.png",
 	"publisher": "SpaceBox",
 	"repository": "https://github.com/amnweb/SpaceBox-UI-Enhancer",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"engines": {
 		"vscode": "^1.86.0"
 	},
@@ -25,14 +25,27 @@
 				"spacebox-ui.defaultStyle": {
 					"type": "boolean",
 					"default": true,
-					"description": "Enable or disable the default style SpaceBoxUI style.",
+					"description": "Enable the default SpaceBoxUI style style.",
+                    "markdownDescription": "This will enable the default SpaceBoxUI style",
                     "order": 1
 				},
+                "spacebox-ui.blurEffect": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the blur effect. This includes the right-click context menu, menu bar, widgets, popups.",
+                    "order": 2
+                },
+                "spacebox-ui.commandCenterBlur": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the command center menu blur.",
+                    "order": 3
+                },
 				"spacebox-ui.importCss": {
 					"type": "string",
 					"default": "",
-					"description": "Path to the custom CSS file to be applied.",
-                    "order": 2
+					"description": "Path to the custom CSS file. This file will be imported directly in VSCode style.",
+                    "order": 4
 				}
 			}
 		},
@@ -44,21 +57,20 @@
 			{
 				"command": "spacebox-ui.restoreSettings",
 				"title": "SpaceBox Disable UI Enhancer"
-			}
+			} 
 		]
 	},
 	"scripts": {
 		"lint": "eslint .",
-		"pretest": "npm run lint",
-		"test": "vscode-test"
+		"pretest": "npm run lint"
 	},
 	"devDependencies": {
-		"@types/mocha": "^10.0.6",
-		"@types/node": "18.x",
-		"@types/vscode": "^1.80.0",
-		"@vscode/test-cli": "^0.0.4",
-		"@vscode/test-electron": "^2.3.8",
-		"eslint": "^8.56.0",
-		"typescript": "^5.3.3"
+        "@types/mocha": "^10.0.6",
+        "@types/node": "^18.0.0",
+        "@types/vscode": "^1.80.0",
+        "@vscode/test-cli": "^0.0.4",
+        "@vscode/test-electron": "^2.3.8",
+        "eslint": "^8.56.0",
+        "typescript": "^5.3.3"
 	}
 }

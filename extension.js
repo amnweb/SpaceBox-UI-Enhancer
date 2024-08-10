@@ -121,6 +121,8 @@ function activate(context) {
 		async () => {
             const config = vscode.workspace.getConfiguration('spacebox-ui');
             const defaultUiStyle = config.get('defaultStyle', true);
+            const blurEffect = config.get('blurEffect', false);
+            const commandCenterBlur = config.get('commandCenterBlur', false);
             const importCss = config.get('importCss');
             if (importCss && fs.existsSync(importCss)) {
                 const importCssContent = fs.readFileSync(importCss, 'utf-8');
@@ -316,6 +318,30 @@ function activate(context) {
                     animation: activityBorder01 .4s forwards
                 }`;
             }
+            if (blurEffect) {
+                newCss += `
+                    .action-widget:after,
+                    .suggest-details-container:after,
+                    .context-view.top.left:after,
+                    .overflowingContentWidgets>div:after,
+                    .workbench-hover-container:after,
+                    .find-widget:after,
+                    .monaco-menu:after,
+                    .shadow-root-host::part(menu)::after {
+                        z-index: -1;
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        bottom: 0;
+                        right: 0;
+                        backdrop-filter: blur(12px)
+                    }`;
+            } 
+            if(commandCenterBlur){
+                newCss += `
+                    .quick-input-widget {backdrop-filter: blur(12px)}`;
+            }
 			restoreFromBackup(workbenchCssPath, false);
 			createBackup(workbenchCssPath);
 			createBackup(workbenchJsPath);
@@ -344,7 +370,6 @@ function activate(context) {
 			promptRestart("You must restart VS Code to see changes");
 		}
 	);
-
 	const restoreDisposable = vscode.commands.registerCommand(
 		restoreSystem,
 		() => {

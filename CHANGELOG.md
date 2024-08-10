@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.1.1
+- Added options for blur.
+
 ## 0.1.0
 - Added options to disable default extension style. `"spacebox-ui.defaultStyle": true|false`
 - Added options for custom css import. You can now import local css file. `"spacebox-ui.importCss": "c:\\Users\\xxx\\editor.css",`
