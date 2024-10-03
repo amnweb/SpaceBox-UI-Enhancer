@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.1.2
+- Compatibility with VSCode 1.94
+
 ## 0.1.1
 - Added options for blur.
 
