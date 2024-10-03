@@ -2,123 +2,127 @@ const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
-const appDir = path.dirname(require.main.filename);
+
+const appDir = require.main ? path.dirname(require.main.filename) : path.dirname(process.argv[1]);
 const appRoot = vscode.env.appRoot;
 const productFile = path.join(appRoot, "product.json");
 const origFile = `${productFile}.orig.${vscode.version}`;
 const workbenchCssPath = path.join(
-	appRoot,
-	"out",
-	"vs",
-	"workbench",
-	"workbench.desktop.main.css"
+    appRoot,
+    "out",
+    "vs",
+    "workbench",
+    "workbench.desktop.main.css"
 );
 const workbenchJsPath = path.join(
-	appRoot,
-	"out",
-	"vs",
-	"workbench",
-	"workbench.desktop.main.js"
+    appRoot,
+    "out",
+    "vs",
+    "workbench",
+    "workbench.desktop.main.js"
 );
 
 async function promptRestart() {
-	const config = vscode.workspace.getConfiguration();
-	const configKey = "update.mode";
-	const value = config.inspect(configKey);
+    const config = vscode.workspace.getConfiguration();
+    const configKey = "update.mode";
+    const value = config.inspect(configKey);
 
-	await config.update(
-		configKey,
-		config.get(configKey) === "default" ? "manual" : "default",
-		vscode.ConfigurationTarget.Global
-	);
-	config.update(
-		configKey,
-		value && value.globalValue,
-		vscode.ConfigurationTarget.Global
-	);
+    await config.update(
+        configKey,
+        config.get(configKey) === "default" ? "manual" : "default",
+        vscode.ConfigurationTarget.Global
+    );
+    config.update(
+        configKey,
+        value && value.globalValue,
+        vscode.ConfigurationTarget.Global
+    );
 }
 
 function applyChecksum() {
-	const product = require(productFile);
-	let changed = false;
-	for (const [filePath, curChecksum] of Object.entries(product.checksums)) {
-		const checksum = computeChecksum(
-			path.join(appDir, ...filePath.split("/"))
-		);
-		if (checksum !== curChecksum) {
-			product.checksums[filePath] = checksum;
-			changed = true;
-		}
-	}
-	if (changed) {
-		const json = JSON.stringify(product, null, "\t");
-		try {
-			if (!fs.existsSync(origFile)) {
-				fs.renameSync(productFile, origFile);
-			}
-			fs.writeFileSync(productFile, json, { encoding: "utf8" });
-		} catch (err) {
-			console.error(err);
-		}
-	}
+    const product = require(productFile);
+    let changed = false;
+    for (const [filePath, curChecksum] of Object.entries(product.checksums)) {
+        const checksum = computeChecksum(
+            path.join(appDir, ...filePath.split("/"))
+        );
+        if (checksum !== curChecksum) {
+            product.checksums[filePath] = checksum;
+            changed = true;
+        }
+    }
+    if (changed) {
+        const json = JSON.stringify(product, null, "\t");
+        try {
+            if (!fs.existsSync(origFile)) {
+                fs.renameSync(productFile, origFile);
+            }
+            fs.writeFileSync(productFile, json, { encoding: "utf8" });
+        } catch (err) {
+            console.error(err);
+        }
+    }
 }
+
 function restoreChecksum() {
-	try {
-		if (fs.existsSync(origFile)) {
-			fs.unlinkSync(productFile);
-			fs.renameSync(origFile, productFile);
-		}
-	} catch (err) {
-		console.error(err);
-	}
+    try {
+        if (fs.existsSync(origFile)) {
+            fs.unlinkSync(productFile);
+            fs.renameSync(origFile, productFile);
+        }
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 function computeChecksum(file) {
-	var contents = fs.readFileSync(file);
-	return crypto
-		.createHash("sha256")
-		.update(contents)
-		.digest("base64")
-		.replace(/=+$/, "");
+    var contents = fs.readFileSync(file);
+    return crypto
+        .createHash("sha256")
+        .update(contents)
+        .digest("base64")
+        .replace(/=+$/, "");
 }
+
 function cleanupOrigFiles() {
-	// Remove all old backup files
-	const oldOrigFiles = fs
-		.readdirSync(appRoot)
-		.filter((file) => /\.orig\./.test(file))
-		.filter((file) => !file.endsWith(vscode.version));
-	for (const file of oldOrigFiles) {
-		fs.unlinkSync(path.join(appRoot, file));
-	}
+    // Remove all old backup files
+    const oldOrigFiles = fs
+        .readdirSync(appRoot)
+        .filter((file) => /\.orig\./.test(file))
+        .filter((file) => !file.endsWith(vscode.version));
+    for (const file of oldOrigFiles) {
+        fs.unlinkSync(path.join(appRoot, file));
+    }
 }
 
 function createBackup(filePath) {
-	const backupPath = `${filePath}.backup`;
-	if (!fs.existsSync(backupPath)) {
-		fs.copyFileSync(filePath, backupPath);
-	}
+    const backupPath = `${filePath}.backup`;
+    if (!fs.existsSync(backupPath)) {
+        fs.copyFileSync(filePath, backupPath);
+    }
 }
 
 function restoreFromBackup(filePath, msgShow = true) {
-	const backupPath = `${filePath}.backup`;
-	if (fs.existsSync(backupPath)) {
-		fs.copyFileSync(backupPath, filePath);
-		if (msgShow) {
-			promptRestart("Settings restored. Restart VS Code to see changes.");
-		}
-	} else {
-		if (msgShow) {
-			vscode.window.showInformationMessage(`Backup files not found`);
-		}
-	}
+    const backupPath = `${filePath}.backup`;
+    if (fs.existsSync(backupPath)) {
+        fs.copyFileSync(backupPath, filePath);
+        if (msgShow) {
+            promptRestart("Settings restored. Restart VS Code to see changes.");
+        }
+    } else {
+        if (msgShow) {
+            vscode.window.showInformationMessage(`Backup files not found`);
+        }
+    }
 }
+
 function activate(context) {
-	const changeSystem = "spacebox-ui.modifyFiles";
-	const restoreSystem = "spacebox-ui.restoreSettings";
-	let newCss = "";
-	const modifyDisposable = vscode.commands.registerCommand(
-		changeSystem,
-		async () => {
+    const changeSystem = "spacebox-ui.modifyFiles";
+    const restoreSystem = "spacebox-ui.restoreSettings";
+    let newCss = "";
+    const modifyDisposable = vscode.commands.registerCommand(
+        changeSystem,
+        async () => {
             const config = vscode.workspace.getConfiguration('spacebox-ui');
             const defaultUiStyle = config.get('defaultStyle', true);
             const blurEffect = config.get('blurEffect', false);
@@ -342,43 +346,43 @@ function activate(context) {
                 newCss += `
                     .quick-input-widget {backdrop-filter: blur(12px)}`;
             }
-			restoreFromBackup(workbenchCssPath, false);
-			createBackup(workbenchCssPath);
-			createBackup(workbenchJsPath);
+            restoreFromBackup(workbenchCssPath, false);
+            createBackup(workbenchCssPath);
+            createBackup(workbenchJsPath);
 
-			// Update workbench.desktop.main.css file
-			const cssFileContent = fs.readFileSync(workbenchCssPath, "utf-8");
-			const modifiedCssContent = cssFileContent + newCss;
-			fs.writeFileSync(workbenchCssPath, modifiedCssContent, "utf-8");
+            // Update workbench.desktop.main.css file
+            const cssFileContent = fs.readFileSync(workbenchCssPath, "utf-8");
+            const modifiedCssContent = cssFileContent + newCss;
+            fs.writeFileSync(workbenchCssPath, modifiedCssContent, "utf-8");
 
-			// Update workbench.desktop.main.js file
-			const jsFileContent = fs.readFileSync(workbenchJsPath, "utf-8");
-			const regexToCheck =
-				/([A-Z])\.classList\.add\("monaco-menu"\),\1\.setAttribute\("role","presentation"\)/;
-			// Test the file content against the regex
-			if (regexToCheck.test(jsFileContent)) {
-				// Replace the matched pattern with the new string
-				const modifiedJsContent = jsFileContent.replace(
-					regexToCheck,
-					'$1.classList.add("monaco-menu"),$1.setAttribute("role","presentation"),$1.setAttribute("part","menu")'
-				);
-				// Write the modified content back to the original file
-				fs.writeFileSync(workbenchJsPath, modifiedJsContent, "utf-8");
-			}
-			cleanupOrigFiles();
-			applyChecksum();
-			promptRestart("You must restart VS Code to see changes");
-		}
-	);
-	const restoreDisposable = vscode.commands.registerCommand(
-		restoreSystem,
-		() => {
-			// Restore files from backups
-			restoreFromBackup(workbenchCssPath);
-			restoreFromBackup(workbenchJsPath);
-			restoreChecksum();
-		}
-	);
-	context.subscriptions.push(modifyDisposable, restoreDisposable);
+            // Update workbench.desktop.main.js file
+            const jsFileContent = fs.readFileSync(workbenchJsPath, "utf-8");
+            const regexToCheck =
+                /([A-Z])\.classList\.add\("monaco-menu"\),\1\.setAttribute\("role","presentation"\)/;
+            // Test the file content against the regex
+            if (regexToCheck.test(jsFileContent)) {
+                // Replace the matched pattern with the new string
+                const modifiedJsContent = jsFileContent.replace(
+                    regexToCheck,
+                    '$1.classList.add("monaco-menu"),$1.setAttribute("role","presentation"),$1.setAttribute("part","menu")'
+                );
+                // Write the modified content back to the original file
+                fs.writeFileSync(workbenchJsPath, modifiedJsContent, "utf-8");
+            }
+            cleanupOrigFiles();
+            applyChecksum();
+            promptRestart("You must restart VS Code to see changes");
+        }
+    );
+    const restoreDisposable = vscode.commands.registerCommand(
+        restoreSystem,
+        () => {
+            // Restore files from backups
+            restoreFromBackup(workbenchCssPath);
+            restoreFromBackup(workbenchJsPath);
+            restoreChecksum();
+        }
+    );
+    context.subscriptions.push(modifyDisposable, restoreDisposable);
 }
 exports.activate = activate;
