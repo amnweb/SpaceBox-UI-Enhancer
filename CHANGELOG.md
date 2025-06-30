@@ -1,5 +1,8 @@
 # Change Log
 
+# 0.1.3
+- Compatibility with VSCode 1.10+
+
 ## 0.1.2
 - Compatibility with VSCode 1.94
 
