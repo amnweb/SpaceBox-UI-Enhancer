@@ -5,9 +5,9 @@
 	"icon": "images/icon.png",
 	"publisher": "SpaceBox",
 	"repository": "https://github.com/amnweb/SpaceBox-UI-Enhancer",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"engines": {
-		"vscode": "^1.108.0"
+		"vscode": "^1.86.0"
 	},
 	"categories": [
 		"Other"
@@ -102,7 +102,7 @@
 	"devDependencies": {
         "@types/mocha": "^10.0.6",
         "@types/node": "^18.0.0",
-        "@types/vscode": "^1.108.0",
+        "@types/vscode": "^1.86.0",
         "@vscode/test-cli": "^0.0.4",
         "@vscode/test-electron": "^2.3.8",
         "eslint": "^8.56.0",
