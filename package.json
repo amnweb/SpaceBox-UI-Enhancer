@@ -5,9 +5,9 @@
 	"icon": "images/icon.png",
 	"publisher": "SpaceBox",
 	"repository": "https://github.com/amnweb/SpaceBox-UI-Enhancer",
-	"version": "0.1.3",
+	"version": "0.1.4",
 	"engines": {
-		"vscode": "^1.86.0"
+		"vscode": "^1.10.8"
 	},
 	"categories": [
 		"Other"
@@ -16,7 +16,7 @@
 		"color": "#0d1116",
 		"theme": "dark"
 	},
-	"activationEvents": [],
+	"activationEvents": ["onStartupFinished"],
 	"main": "./extension.js",
 	"contributes": {
 		"configuration": {
@@ -46,6 +46,41 @@
 					"default": "",
 					"description": "Path to the custom CSS file. This file will be imported directly in VSCode style.",
                     "order": 4
+				},
+				"spacebox-ui.activityBarIndicatorColor": {
+					"type": "string",
+					"default": "",
+					"description": "Custom color for the activity bar indicator bar. Leave empty to use default theme color.",
+					"markdownDescription": "Custom color for the activity bar indicator bar (the vertical bar). Leave empty to use the default `--vscode-activityBar-activeBorder` color.",
+					"order": 5
+				},
+				"spacebox-ui.activityBarIndicatorBackground": {
+					"type": "string",
+					"default": "",
+					"description": "Custom color for the activity bar indicator background. Leave empty to use default theme color.",
+					"markdownDescription": "Custom color for the activity bar indicator background (the highlight behind the icon). Leave empty to use the default `--vscode-activityBar-activeBorder` color.",
+					"order": 6
+				},
+				"spacebox-ui.quickInputPosition": {
+					"type": "string",
+					"enum": ["top", "center"],
+					"default": "top",
+					"description": "Position of the quick input widget (Ctrl+Shift+P menu).",
+					"markdownDescription": "Position of the quick input widget (Ctrl+Shift+P menu).\n- `top`: Default position at the top\n- `center`: Centered on screen",
+					"order": 7
+				},
+				"spacebox-ui.quickInputTopMargin": {
+					"type": "string",
+					"default": "",
+					"description": "Custom top margin for the quick input widget (e.g., '100px', '10%'). Only applies when position is 'top'.",
+					"markdownDescription": "Custom top margin for the quick input widget (e.g., `100px`, `10%`). Only applies when position is set to `top`. Leave empty for default.",
+					"order": 8
+				},
+				"spacebox-ui.stylesheet": {
+					"type": "object",
+					"default": {},
+					"description": "Custom CSS stylesheet as a JSON object. Edit in settings.json.",
+					"order": 9
 				}
 			}
 		},
@@ -57,7 +92,7 @@
 			{
 				"command": "spacebox-ui.restoreSettings",
 				"title": "SpaceBox Disable UI Enhancer"
-			} 
+			}
 		]
 	},
 	"scripts": {

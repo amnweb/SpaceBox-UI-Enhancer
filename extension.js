@@ -116,10 +116,48 @@ function restoreFromBackup(filePath, msgShow = true) {
     }
 }
 
+// Convert stylesheet object to CSS string (supports nested selectors)
+function generateStyleFromObject(obj) {
+    function gen(obj, styles = '') {
+        for (const [prop, value] of Object.entries(obj)) {
+            switch (typeof value) {
+                case 'string':
+                case 'number':
+                    styles += `${prop}:${value};`;
+                    break;
+                case 'object':
+                    if (value) {
+                        styles += `${prop}{${gen(value)}}`;
+                    }
+                    break;
+            }
+        }
+        return styles;
+    }
+
+    let style = '';
+    for (const [selectors, val] of Object.entries(obj)) {
+        let css = '';
+        switch (typeof val) {
+            case 'string':
+                css = val;
+                break;
+            case 'object':
+                css = gen(val);
+                break;
+            default:
+                continue;
+        }
+        style += `${selectors}{${css}}`;
+    }
+    return style;
+}
+
 function activate(context) {
     const changeSystem = "spacebox-ui.modifyFiles";
     const restoreSystem = "spacebox-ui.restoreSettings";
     let newCss = "";
+
     const modifyDisposable = vscode.commands.registerCommand(
         changeSystem,
         async () => {
@@ -128,9 +166,17 @@ function activate(context) {
             const blurEffect = config.get('blurEffect', false);
             const commandCenterBlur = config.get('commandCenterBlur', false);
             const importCss = config.get('importCss');
+            const activityBarIndicatorColor = config.get('activityBarIndicatorColor', '');
+            const activityBarIndicatorBackground = config.get('activityBarIndicatorBackground', '');
+            const quickInputPosition = config.get('quickInputPosition', 'top');
+            const quickInputTopMargin = config.get('quickInputTopMargin', '');
+            const stylesheet = config.get('stylesheet', {});
             if (importCss && fs.existsSync(importCss)) {
                 const importCssContent = fs.readFileSync(importCss, 'utf-8');
                 newCss += importCssContent;
+            }
+            if (stylesheet && Object.keys(stylesheet).length > 0) {
+                newCss += generateStyleFromObject(stylesheet);
             }
             if (defaultUiStyle) {
                 newCss += `:root {
@@ -161,18 +207,18 @@ function activate(context) {
                 .monaco-workbench .activitybar>.content :not(.monaco-menu)>.monaco-action-bar .active-item-indicator {
                     z-index: 0 !important
                 }
-                div.monaco-workbench.enable-motion .activitybar.part .monaco-action-bar .action-item.checked .active-item-indicator:before {
+                div.monaco-workbench .activitybar>.content :not(.monaco-menu)>.monaco-action-bar .action-item.checked .active-item-indicator:before {
                     height: 40% !important;
                     top: 30% !important;
                     left: 2px !important;
                     border-left-width: 0 !important;
                     width: 4px;
-                    background-color: var(--vscode-activityBar-activeBorder);
+                    background-color: ${activityBarIndicatorColor || 'var(--vscode-activityBar-activeBorder)'};
                     border-radius: 8px !important;
                     animation: activityBorder01 .4s forwards
                 }
-                div.monaco-workbench.enable-motion .activitybar.part .monaco-action-bar .action-item.checked .active-item-indicator:after {
-                    background-image: linear-gradient(var(--vscode-activityBar-activeBorder), var(--vscode-activityBar-activeBorder));
+                div.monaco-workbench .activitybar>.content :not(.monaco-menu)>.monaco-action-bar .action-item.checked .active-item-indicator:after {
+                    background-image: linear-gradient(${activityBarIndicatorBackground || 'var(--vscode-activityBar-activeBorder)'}, ${activityBarIndicatorBackground || 'var(--vscode-activityBar-activeBorder)'});
                     content: "";
                     position: absolute;
                     left: 4px;
@@ -346,6 +392,47 @@ function activate(context) {
                 newCss += `
                     .quick-input-widget {backdrop-filter: blur(12px)}`;
             }
+            if(quickInputPosition === 'center'){
+                newCss += `
+                    .quick-input-widget {
+                        top: 50% !important;
+                        transform: translateY(-50%);
+                    }
+                    .quick-input-widget:not([style*="display: none;"]) {
+                        animation: openPopupCenter01 .4s;
+                        transform-origin: center;
+                    }
+                    .quick-input-widget[style*="display: none;"] {
+                        animation: closePopupCenter01 .4s;
+                        transform-origin: center;
+                        transform: translateY(-50%) scaleY(0);
+                    }
+                    @keyframes openPopupCenter01 {
+                        0% {
+                            opacity: 0;
+                            transform: translateY(-50%) scaleY(0)
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(-50%) scaleY(1)
+                        }
+                    }
+                    @keyframes closePopupCenter01 {
+                        0% {
+                            opacity: 1;
+                            transform: translateY(-50%) scaleY(1)
+                        }
+                        to {
+                            opacity: 0;
+                            transform: translateY(-50%) scaleY(0)
+                        }
+                    }`;
+            } else if(quickInputTopMargin){
+                newCss += `
+                    .quick-input-widget {
+                        top: ${quickInputTopMargin} !important;
+                    }`;
+            }
             restoreFromBackup(workbenchCssPath, false);
             createBackup(workbenchCssPath);
             createBackup(workbenchJsPath);
@@ -383,6 +470,21 @@ function activate(context) {
             restoreChecksum();
         }
     );
-    context.subscriptions.push(modifyDisposable, restoreDisposable);
+
+    // Listen for configuration changes
+    const configChangeDisposable = vscode.workspace.onDidChangeConfiguration(async (e) => {
+        if (e.affectsConfiguration('spacebox-ui')) {
+            const action = await vscode.window.showInformationMessage(
+                'SpaceBox UI settings changed. Apply changes and reload?',
+                'Apply & Reload',
+                'Later'
+            );
+            if (action === 'Apply & Reload') {
+                await vscode.commands.executeCommand(changeSystem);
+            }
+        }
+    });
+
+    context.subscriptions.push(modifyDisposable, restoreDisposable, configChangeDisposable);
 }
 exports.activate = activate;

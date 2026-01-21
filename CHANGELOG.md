@@ -1,5 +1,13 @@
 # Change Log
 
+# 0.1.4
+- **New Feature**: Activity bar indicator customization - custom colors for indicator bar and background
+- **New Feature**: Quick input widget position - center or top with custom margin
+- **New Feature**: Custom stylesheet support - add CSS directly in settings.json as JSON object
+- **New Feature**: Auto-reload on settings change - prompts to apply changes when settings are modified
+- **Improvement**: Extension now activates on startup for better settings change detection
+- Updated documentation with examples
+
 # 0.1.3
 - Compatibility with VSCode 1.10+
 
